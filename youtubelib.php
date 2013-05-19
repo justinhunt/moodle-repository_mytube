@@ -166,6 +166,7 @@ class repository_mytube_youtube_api {
 		//prepare the URL to our uploader page that will be loaded in an iframe
 		$src = $CFG->httpswwwroot . $this->config->get('modroot') . '/uploader.php?showform=1';
 		$src .= '&videotitle=' . urlencode($videotitle);
+		$src .= '&parentid=' . $this->config->get('parentid');
 		
 		//Here we make up the HTML for the upload iframe. This will also be called by javascript after oauth authentication
 		$uploaderhtml = "<iframe src='$src' width='500' height='110' frameborder='0'></iframe>";
@@ -184,9 +185,11 @@ class repository_mytube_youtube_api {
 		//get the default video title
 		$videotitle = $this->get_video_title();
 		
+		
 		//prepare the URL to our uploader page that will be loaded in an iframe
 		$src = $CFG->httpswwwroot . $this->config->get('modroot') . '/browser.php';
 		$src .= '?videotitle=' . urlencode($videotitle);
+		$src .= '&parentid=' . $this->config->get('parentid');
 		
 		//Here we make up the HTML for the browser iframe.
 		$browserhtml = "<div class='scroller'>";
@@ -197,7 +200,7 @@ class repository_mytube_youtube_api {
 	}
 	
 	/**
-     * Get teh default title of the recorde/upload video
+     * Get teh default title of the recorded/upload video
      *
      * @return the video title
      */

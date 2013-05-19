@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('/../../config.php');
+require_once('../../config.php');
 require_once('youtubelib.php');
 
 global $PAGE, $USER;
@@ -35,6 +35,7 @@ $status = optional_param('status', 0,PARAM_INT); // request status
 $video_id = optional_param('id', '', PARAM_TEXT); // youtube id of video
 $code = optional_param('code', 0,PARAM_INT); // error code
 $video_title = optional_param('videotitle', 'MyTube Repository',PARAM_TEXT); // title of video
+$parentid = optional_param('parentid', 0,PARAM_INT); // error code
 
 //we need to set the page context
 require_login();
@@ -73,7 +74,7 @@ if($showform==0){
 
 	// load the youtube submission plugin
 	require_once($CFG->dirroot . '/repository/mytube/lib.php');
-	$ytplugin = repository_mytube::get("youtube");
+	$ytplugin = repository::get_instance($parentid);
 	$ytconfig = $ytplugin->get_ytconfig();
 	$ytargs = Array('component'=>'repository_mytube','config'=>$ytconfig);
 	

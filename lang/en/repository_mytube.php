@@ -24,7 +24,7 @@
  */
 
 
-$string['pluginname'] = 'MyTube Repository';
+$string['pluginname'] = 'MyTube';
 $string['repositoryname'] = 'MyTube';
 $string['configplugin'] = 'Configure MyTube Repository';
 $string['pluginname_help'] = 'MyTube repository';
@@ -101,8 +101,8 @@ $string['allowuploads'] = 'Enable file submissions';
 $string['allowuploadsdetails'] = '';
 $string['allowwebcam'] = 'Enable webcam submissions';
 $string['allowwebcamdetails'] = '';
-$string['allowmanual'] = 'Enable submissions from YouTube account';
-$string['allowmanualdetails'] = '';
+$string['allowbrowse'] = 'Enable submissions from YouTube account';
+$string['allowbrowsedetails'] = '';
 $string['clicktoplayvideo'] = 'Click to play video';
 $string['clicktorecordvideo'] = 'Click to Record Video';
 $string['logintext'] = 'Login with Google/YouTube';

@@ -30,9 +30,11 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once("$CFG->dirroot/repository/mytube/youtubelib.php");
+require_once("$CFG->dirroot/repository/lib.php");
+
 
 class repository_mytube extends repository {
-	protected $component = 'repository_youtube';
+	protected $component = 'repository_mytube';
 	protected $ytconfig = null;
 
     /**
@@ -46,7 +48,7 @@ class repository_mytube extends repository {
     }
 
 	public static function get_instance_option_names() {
-    	return array('allow_uploads','allow_webcam','allow_manual','authtype','devkey',
+    	return array('allow_uploads','allow_webcam','allow_browse','authtype','devkey',
 		'youtube_masteruser','youtube_masterpass','youtube_clientid','youtube_secret',
 		'videoprivacy','videocategory','allow_ytcomment','allow_ytrate','allow_ytrespond');
     }
@@ -69,9 +71,9 @@ class repository_mytube extends repository {
 		$mform->setDefault('allow_webcam', 1);
 
 		// Allow manual
-		$mform->addElement('checkbox','allow_manual',
-						   get_string('allowmanual', 'repository_mytube'));
-		$mform->setDefault('allow_manual', 1);
+		$mform->addElement('checkbox','allow_browse',
+						   get_string('allowbrowse', 'repository_mytube'));
+		$mform->setDefault('allow_browse', 1);
 						   
 		// Section for authentication keys and settings
 		//$settings->add(new admin_setting_heading('keysauthheading', '', get_string('keysauthheading', 'repository_mytube')));
@@ -154,6 +156,7 @@ class repository_mytube extends repository {
     }
 	
 	public function get_upload_template(){
+		global $PAGE;
 		$template = '';
 		
 		//init youtube api
@@ -174,34 +177,26 @@ class repository_mytube extends repository {
 		$template .= $yt->get_youtube_tabset();
 		
 		
+		//set up our javascript for the YUI tabs
+		$jsmodule = array(
+			'name'     => 'repository_mytube',
+			'fullpath' => '/repository/mytube/module.js',
+			'requires' => array('tabview')
+		);
+		
+		//configure our options array for the javascript
+		$opts = array(
+			"tabsetid"=> $this->ytconfig->get('tabsetid')
+		);
+		
+		//request the javascript on the page
+		$PAGE->requires->js_init_call('M.repository_mytube.init', array($opts),false,$jsmodule);
+		
+		
 		return $template;
 	}
 
-    public function old_get_upload_template() {
-        $template = '
-<div class="fp-upload-form mdl-align">
-    <div class="fp-content-center">
-        <form enctype="multipart/form-data" method="POST">
-            <table >
-                <tr class="{!}fp-recordaudio-recorder">
-                    <td class="mdl-right"><label>recorder:</label>:</td>
-                    <td class="mdl-left">'.$this->get_recorder().'</td></tr>
-                </tr>
-                <tr class="{!}fp-file">
-                    <td class="mdl-right"></td>
-                    <td class="mdl-left"><input type="file"/></td>
-                </tr>
-                <tr class="{!}fp-saveas">
-                    <td class="mdl-right"></td>
-                    <td class="mdl-left"><input type="text"/></td>
-                </tr>
-            </table>
-        </form>
-        <div><button class="{!}fp-upload-btn">UPLOAD</button></div>
-    </div>
-</div> ';
-        return preg_replace('/\{\!\}/', '', $template);
-    }
+
 
     public function check_login() {
         // Needs to return false so that the "login" form is displayed (print_login())
@@ -235,7 +230,7 @@ class repository_mytube extends repository {
 		$config->set('masterpass',$this->options['youtube_masterpass']);
 		$config->set('clientid',$this->options['youtube_clientid']);
 		$config->set('secret',$this->options['youtube_secret']);
-		$config->set('allow_manual',$this->options['allow_manual']);
+		$config->set('allow_manual',$this->options['allow_browse']); //this is just for testing url input
 		$config->set('allow_browse',$this->options['allow_browse']);
 		$config->set('allow_webcam',$this->options['allow_webcam']);
 		$config->set('allow_uploads',$this->options['allow_uploads']);
@@ -244,9 +239,10 @@ class repository_mytube extends repository {
 		$config->set('allow_ytcomment',$this->options['allow_ytcomment']);
 		$config->set('allow_ytrate',$this->options['allow_ytrate']);
 		$config->set('allow_ytrespond',$this->options['allow_ytrespond']);
+		$config->set('parentid',$this->id);
 	
 		//eg /mod/assign/submission/youtube
-		$config->set('modroot','/lib/editor/tinymce/plugins/youtube');
+		$config->set('modroot','/repository/mytube');
 		//eg /mod/assign/view.php
 		//$config->set('returnurl',$PAGE->url);
 		$config->set('returnurl',$CFG->httpswwwroot . '/repository/mytube_callback.php');
