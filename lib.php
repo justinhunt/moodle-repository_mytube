@@ -176,6 +176,8 @@ class repository_mytube extends repository {
 					*/
 		$template .= $yt->get_youtube_tabset();
 		
+		$template .= "<script type='text/javascript'>loadtabs('".$this->ytconfig->get('tabsetid')."');</script>";
+		
 		
 		//set up our javascript for the YUI tabs
 		$jsmodule = array(
