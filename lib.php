@@ -154,10 +154,95 @@ class repository_mytube extends repository {
         $recorder = "this is a recorder";
         return $recorder;
     }
-	
-	public function get_upload_template(){
-		global $PAGE;
-		$template = '';
+
+    public function initjs(){
+        
+            global $PAGE;  
+            $this->ytconfig = $this->get_ytconfig();
+            
+            //set up our javascript for the YUI tabs
+            $jsmodule = array(
+                    'name'     => 'repository_mytube',
+                    'fullpath' => '/repository/mytube/module.js',
+                    'requires' => array('tabview')
+            );
+
+            //configure our options array for the javascript
+            $opts = array(
+                    "tabsetid"=> $this->ytconfig->get('tabsetid')
+            );
+
+            //request the javascript on the page
+            $PAGE->requires->js_init_call('M.repository_mytube.loadyuitabs', array($opts),false,$jsmodule);
+    }
+    
+    	public function xget_upload_template(){
+            global $PAGE,$CFG;
+            
+            $this->ytconfig = $this->get_ytconfig();
+            
+            //set up our javascript for the YUI tabs
+            $jsmodule = array(
+                    'name'     => 'repository_mytube',
+                    'fullpath' => '/repository/mytube/module.js',
+                    'requires' => array('tabview')
+            );
+
+            //configure our options array for the javascript
+            $opts = array(
+                    "tabsetid"=> $this->ytconfig->get('tabsetid')
+            );
+
+            //request the javascript on the page
+            $PAGE->requires->js_init_call('M.repository_mytube.init', array($opts),false,$jsmodule);
+
+            
+            $template = "<iframe scrolling=\"no\" frameBorder=\"0\" src=\"{$CFG->wwwroot}/repository/mytube/recorder.php?parentid={$this->id}\" height=\"350\" width=\"450\"></iframe>";
+            
+            return $template;
+        }
+        
+        public function get_upload_template(){
+            global $PAGE,$CFG;
+            
+            //set up our javascript for the YUI tabs
+            $jsmodule = array(
+                    'name'     => 'repository_mytube',
+                    'fullpath' => '/repository/mytube/module.js',
+                    'requires' => array('tabview')
+            );
+
+            
+            //init youtube api
+            $this->ytconfig = $this->get_ytconfig();
+            $ytargs = Array('component'=>$this->component,'config'=>$this->ytconfig);
+            $yt = new repository_mytube_youtube_api($ytargs);
+
+            //configure our options array for the javascript
+            $uploader_html = get_string('uploadavideodetails', $this->component) 
+					. $yt->get_uploader_iframe_html();
+            $browselist_html = get_string('browsevideosdetails', $this->component) 
+					. $yt->get_browser_iframe_html();
+        //    $browselist_button_html = get_string('browsevideosdetails', $this->component) 
+	//				. $yt->get_youtube_browselist_displaybutton();
+            $opts = array(
+                    "tabsetid"=> $this->ytconfig->get('tabsetid'),
+                    "browselist_html"=>$browselist_html,
+                    "uploader_html"=>$uploader_html
+            );
+
+            //request the javascript on the page
+            $PAGE->requires->js_init_call('M.repository_mytube.init', array($opts),false,$jsmodule);
+
+            //build our template html for return
+            $template = $yt->get_youtube_tabset();
+            $template .= "<iframe scrolling=\"no\" frameBorder=\"0\" src=\"{$CFG->wwwroot}/repository/mytube/triggerjs.html\" height=\"1\" width=\"1\"></iframe>";
+            return $template;
+        }
+    
+	public function get_youtube_form($yt){
+		
+		$form = '';
 		
 		//init youtube api
 		$this->ytconfig = $this->get_ytconfig();
@@ -174,28 +259,13 @@ class repository_mytube extends repository {
 		$params['browselist_button_html'] = get_string('browsevideosdetails', $this->component) 
 					. $yt->get_youtube_browselist_displaybutton();
 					*/
-		$template .= $yt->get_youtube_tabset();
+		$form .= $yt->get_youtube_tabset();
 		
-		$template .= "<script type='text/javascript'>loadtabs('".$this->ytconfig->get('tabsetid')."');</script>";
-		
-		
-		//set up our javascript for the YUI tabs
-		$jsmodule = array(
-			'name'     => 'repository_mytube',
-			'fullpath' => '/repository/mytube/module.js',
-			'requires' => array('tabview')
-		);
-		
-		//configure our options array for the javascript
-		$opts = array(
-			"tabsetid"=> $this->ytconfig->get('tabsetid')
-		);
-		
-		//request the javascript on the page
-		$PAGE->requires->js_init_call('M.repository_mytube.init', array($opts),false,$jsmodule);
+		//$form .= "<script type='text/javascript'>loadtabs();</script>";
 		
 		
-		return $template;
+		
+		return $form;
 	}
 
 

@@ -12,8 +12,11 @@ M.repository_mytube = {};
 
 // Replace designated div with a YUI tab set
 M.repository_mytube.init = function(Y,opts) {
-	mytube_repo_tabsetid=opts['tabsetid'];
-/*
+    console.log('running init');
+    mytube_repo_tabsetid=opts['tabsetid'];
+    M.repository_mytube.browselist_html=opts['browselist_html'];
+    M.repository_mytube.uploader_html=opts['uploader_html'];
+        /*
 	Y.use('tabview', function(Y) {
 		var tabview = new Y.TabView({
 			srcNode: '#' + opts['tabsetid']
@@ -21,21 +24,26 @@ M.repository_mytube.init = function(Y,opts) {
 
 		tabview.render();
 	});
-	*/
+        */
+	
 }
 
 
 function loadtabs(tabsetid){
+        console.log('running loadtabs');
 	YUI().use('tabview', function(Y) {
-		var tabView = new Y.TabView({srcNode: '#' + mytube_repo_tabsetid}); 
+		var tabView = new Y.TabView({srcNode: '#' + tabsetid}); 
 		tabView.render();
 	});
 }
 
 // Replace designated div with a YUI tab set
-M.repository_mytube.loadyuitabs = function(tabsetid) {
+M.repository_mytube.loadyuitabs = function(Y, opts) {
+        console.log('running loadyuitabs');
 	YUI().use('tabview', function(Y) {
-		var tabView = new Y.TabView({srcNode:tabsetid}); 
+		var tabview = new Y.TabView({
+			srcNode: '#' + opts['tabsetid']
+		});
 		tabView.render();
 	});
 }
@@ -58,49 +66,56 @@ M.repository_mytube.loadytrecorder = function(Y,opts) {
 
 }
 
-		function directLoadYTRecorder(recorderid,videoname,width) {
+		function repository_mytube_directLoadYTRecorder(recorderid,videoname,width) {
 			videotitle = videoname;
 			widget = new YT.UploadWidget(recorderid, {
 			  width: width,
 			  webcamOnly: true,
 			  events: {
-            'onUploadSuccess': onUploadSuccess,
-            'onProcessingComplete': onProcessingComplete,
-            'onApiReady': onApiReady
+            'onUploadSuccess': repository_mytube_onUploadSuccess,
+            'onProcessingComplete': repository_mytube_onProcessingComplete,
+            'onApiReady': repository_mytube_onApiReady
 			}
 		});
 		
 		}
 	 
-	    function directLoadYTPlayer(playerid,width,height,videoid){
-			new YT.Player(playerid, {
-			width: width,
-			height: height,      
-			videoId: videoid,
-			events: {
-            'onReady': onYTPlayerReady,
-            'onStateChange': onYTPlayerStateChange		
-          }
-        });
-		
-		}
+         
+         
+// Show upload form and browse list
+//this will be called after user has auth'ed with google in popup
+function repository_mytube_initTabsAfterLogin() {
+	repository_mytube_displayBrowseList();
+	repository_mytube_displayUploadForm();
+}
 
-	   function onYTPlayerReady(event) {
-			//do something, eg event.target.playVideo();
-	  }
-	    function onYTPlayerStateChange(event) {
-			//do something, eg event.target.playVideo();
-	  }
-	  
-	     function onUploadSuccess(event) {
+//show the upload form in upload tab
+//only called from initTabsAfterLogin
+function repository_mytube_displayUploadForm() {
+	var uploadtab	= document.getElementById('tabupload');
+	if(uploadtab){
+		uploadtab.innerHTML = M.repository_mytube.uploader_html;
+	}
+}
+
+//show the list of videos in browse list tab
+//called from initTabsAfterLogin and onclick event of "browse list display" button
+function repository_mytube_displayBrowseList() {
+	var browsetab = document.getElementById('tablist');
+	if(browsetab){
+		browsetab.innerHTML = M.repository_mytube.browselist_html;
+	}
+}
+
+function repository_mytube_onUploadSuccess(event) {
 			document.getElementById('id_youtubeid').value=event.data.videoId;
 	  }
-	    function onProcessingComplete(event) {
+function repository_mytube_onProcessingComplete(event) {
 			//document.getElementById('id_youtubeid').value=event.data.videoId;
 	  }
 	  
-	   function onApiReady(event) {
-			//var widget = event.target; //this might work, if global "widget" doesn't
+function repository_mytube_onApiReady(event) {
+		//var widget = event.target; //this might work, if global "widget" doesn't
 			widget.setVideoTitle(videotitle);
 			widget.setVideoDescription(videotitle);
 			widget.setVideoPrivacy('unlisted'); 

@@ -392,7 +392,7 @@ class repository_mytube_youtube_api {
 		//$PAGE->requires->js_init_call('M.assignsubmission_youtube.loadytrecorder', array($opts),false,$jsmodule);
 		$ret .= "<input type='button' value='" . 
 				get_string('clicktorecordvideo', $this->component) . 
-			"' onclick='repository_mytube_directLoadYTRecorder(\"" . $recorderid. "\",\"" . $videotitle. "\",\"" . $videoprivacy. "\", " . $width . ");this.style.display=\"none\";' >";
+			"' onclick='" . $this->component . "_directLoadYTRecorder(\"" . $recorderid. "\",\"" . $videotitle. "\",\"" . $videoprivacy. "\", " . $width . ");this.style.display=\"none\";' >";
 		
 		//
 		$ret .= "<div id='$recorderid'></div>";
@@ -401,7 +401,7 @@ class repository_mytube_youtube_api {
 	}
 	
 	public function get_youtube_browselist_displaybutton(){
-		$button = "<button type='button' onclick='repository_mytube_displayBrowseList()' >Display List of Youtube Videos</button>";
+		$button = "<button type='button' onclick='" . $this->component . "_displayBrowseList()' >Display List of Youtube Videos</button>";
 		return $button;
 	}
 	
