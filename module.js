@@ -28,6 +28,12 @@ M.repository_mytube.init = function(Y,opts) {
 	
 }
 
+//Insert video link back into htmlarea
+function repository_mytube_insertYoutubeLink(vid) {
+	document.getElementById('id_youtubeid').value=vid;
+}
+
+
 
 function loadtabs(tabsetid){
         console.log('running loadtabs');

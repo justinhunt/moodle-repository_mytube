@@ -233,12 +233,56 @@ class repository_mytube extends repository {
 
             //request the javascript on the page
             $PAGE->requires->js_init_call('M.repository_mytube.init', array($opts),false,$jsmodule);
+			
+			$template = "";
+			$template = '<form  method="POST">';
+			$template .= "<input type=\"hidden\" name=\"id_youtubeid\" id=\"id_youtubeid\"/>";
 
-            //build our template html for return
-            $template = $yt->get_youtube_tabset();
+            //build our template html containing all the youtube stuff
+            $template .= $yt->get_youtube_tabset();
             $template .= "<iframe scrolling=\"no\" frameBorder=\"0\" src=\"{$CFG->wwwroot}/repository/mytube/triggerjs.html\" height=\"1\" width=\"1\"></iframe>";
-            return $template;
+   			$template .= '</form>';
+   			$template .= '<button class="{!}fp-upload-btn">'.get_string('upload', 'repository').'</button>';
+            return preg_replace('/\{\!\}/', '', $template);
+            //return $template;
+           // return $this->get_pauls_form($template);
         }
+        
+    public function get_pauls_form($rec){
+    	$template = '
+<div class="fp-upload-form mdl-align">
+<div class="fp-content-center">
+<form enctype="multipart/form-data" method="POST">
+<table >
+<tr class="{!}fp-setauthor">
+<td class="mdl-right"><label>'.get_string('author', 'repository').'</label>:</td>
+<td class="mdl-left"><input type="text"/></td>
+</tr>
+<tr class="{!}fp-setlicense">
+<td class="mdl-right"><label>'.get_string('chooselicense', 'repository').'</label>:</td>
+<td class="mdl-left"><select/></td>
+</tr>
+<tr class="{!}fp-recordaudio-recorder">
+<td class="mdl-right"><label>nahnaha</label>:</td>
+<td class="mdl-left">'.$rec.'</td></tr>
+</tr>
+<tr class="{!}fp-file">
+<td class="mdl-right"></td>
+<td class="mdl-left"><input type="file"/></td>
+</tr>
+<tr class="{!}fp-saveas">
+<td class="mdl-right"></td>
+<td class="mdl-left"><input type="text"/></td>
+</tr>
+</table>
+</form>
+<div><button class="{!}fp-upload-btn">'.get_string('upload', 'repository').'</button></div>
+</div>
+</div> ';
+        return preg_replace('/\{\!\}/', '', $template);
+    }
+    
+    
     
 	public function get_youtube_form($yt){
 		
@@ -323,6 +367,18 @@ class repository_mytube extends repository {
 		return $config;
 	}
 
+
+	/**
+	* Process uploaded file
+	* @return array|bool
+	*/
+    public function upload($search_text) {
+        return array(
+                'url'=>'http://youtu.be/TJ_ksEd0ccQ',
+                'id'=>0,
+                'file'=>'YouTube Video');
+        
+    }
  
 
     /**
