@@ -50,10 +50,9 @@ if($showform==0){
 				<script type="text/javascript">
 					function process_youtube_return()
 					{
-						var vfield = parent.document.getElementById('youtubevidid');
-						vfield.value = '<?php echo $video_id; ?>';
-						//if auto saving, uncomment this
-						//parent.document.getElementById('id_submitbutton').click();
+
+						parent.repository_mytube_insertYoutubeLink('<?php echo $video_id; ?>');
+						
 					}
 				</script>
 			</head>

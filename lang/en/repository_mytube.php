@@ -30,6 +30,7 @@ $string['configplugin'] = 'Configure MyTube Repository';
 $string['pluginname_help'] = 'MyTube repository';
 $string['mytube:view'] = 'View MyTube repository';
 
+$string['ayoutubevideo'] = 'A YouTube Video';
 $string['visibletabsheading'] = 'YouTube Anywhere Tabset Settings';
 $string['keysauthheading'] = 'Authentication and API Key Settings';
 $string['videoinfoheading'] = 'Video Default Settings on YouTube';
@@ -116,7 +117,7 @@ $string['browsevideos'] = 'Select a YouTube video';
 $string['browsevideosdetails'] = "Select a YouTube video from the list below.<br />";
 $string['uploadsuccessful'] = 'Upload Successful';
 $string['uploadfailed'] = 'Upload Failed';
-$string['pleasesave'] = 'click the Insert button to finish.';
+$string['pleasesave'] = 'Click the \'Next\' button and continue to finish.';
 $string['nodevkey'] =  'To upload, your administrator must specify their developer key in the admin settings for this plugin.';
 $string['nomaster'] =  'To upload, your administrator must specify a master YouTube account and password.';
 $string['nooauth2'] =  'To upload, your administrator must specify a Google OAUTH2 client id and secret.';

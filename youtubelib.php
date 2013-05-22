@@ -16,7 +16,7 @@
 
 /**
  * The YouTube and general logic for the YouTube Anywhere plugin for TinyMCE on Moodle
- * Crowdfunced by many cool people
+ * (different to tinymce_youtube because used component name more, and added a param to callback)
  *
  * @package    repository_mytube
  * @copyright 2012 Justin Hunt {@link http://www.poodll.com}
@@ -95,8 +95,9 @@ class repository_mytube_youtube_api {
 		//clientlogin for authorizing by masteruser
 		switch ($this->config->get('authtype')){
 			case 'byuser':
-					$returnurl = new moodle_url($this->config->get('returnurl'));		
-					$this->initialize_oauth($returnurl);
+					$returnurl = new moodle_url($this->config->get('returnurl'));
+					$returnparam = $this->config->get('returnparam');		
+					$this->initialize_oauth($returnurl,$returnparam);
 					$httpclient = $this->get_youtube_httpclient("oauth2");
 					break;
 			case 'bymaster':
@@ -193,7 +194,7 @@ class repository_mytube_youtube_api {
 		
 		//Here we make up the HTML for the browser iframe.
 		$browserhtml = "<div class='scroller'>";
-		$browserhtml .= "<iframe src='$src' width='540' height='350' frameborder='0'></iframe>";
+		$browserhtml .= "<iframe src='$src' width='500' height='300' frameborder='0'></iframe>";
 		$browserhtml .= "</div>"; 
 		
 		return $browserhtml;
@@ -269,10 +270,11 @@ class repository_mytube_youtube_api {
 		if($authtype=='byuser' && $browseuploadok){
 
 			$returnurl = new moodle_url($this->config->get('returnurl'));
-			$returnurl->param('sesskey', sesskey());
+			$returnparam = $this->config->get('returnparam');
+			//$returnurl->param('sesskey', sesskey());
 	
 			//get our youtube object
-			$this->initialize_oauth($returnurl);
+			$this->initialize_oauth($returnurl,$returnparam);
 			
 			if (!$this->youtubeoauth->is_logged_in()) {
 					$loginurl = $this->youtubeoauth->get_login_url();
@@ -353,12 +355,19 @@ class repository_mytube_youtube_api {
     }
 	
 	//Here we init the auth, which will set up stuff for google
-	  public function initialize_oauth($returnurl) {
+	  public function initialize_oauth($returnurl,$returnparam) {
 		//the realm is always the same for YouTube api calls
 		//and the clientid and secret are set in the admin settings for this plugin
         $clientid = $this->config->get('clientid');
         $secret = $this->config->get('secret');
 		$realm = "http://gdata.youtube.com";
+		
+		//set up the return url with any extra info we need
+		$returnurl = new moodle_url($returnurl);
+        $returnurl->param('callback', 'yes');
+        $returnurl->param('returnparam', $returnparam);
+        $returnurl->param('sesskey', sesskey());
+		
 		//create and store our YouTube oauth client
         $this->youtubeoauth = new repository_mytube_oauth($clientid, $secret, $returnurl, $realm);
     }
@@ -374,7 +383,7 @@ class repository_mytube_youtube_api {
 		
 		$PAGE->requires->js(new moodle_url('http://www.youtube.com/iframe_api'));
 		$recorderid = "youtuberecorder_id";
-		$width=500;
+		$width=400;
 		$ret="";
 	
 		//set our video privacy setting flag
@@ -462,7 +471,7 @@ class repository_mytube_youtube_api {
 			
 			$item = "<div><table class='repository_mytube_result_row' width='500'><tr><td class='repository_mytube_result_thumbcell'><img src='". $thumburl 
 					. "' height='50'/></td><td class='repository_mytube_result_infocell'><strong>$title</strong></br>Length: $showlength Date: $showdate" 
-					. "<br /><button type='button' onclick='window.parent.repository_mytube_insertYoutubeLink(\"$vid\")' class='repository_mytube_result_insert'>INSERT</button>"
+					. "<br /><button type='button' onclick='window.parent.repository_mytube_insertYoutubeLink(\"$vid\");window.parent.repository_mytube_pushnext();' class='repository_mytube_result_insert'>INSERT</button>"
 					. "</td></tr></table> </div><hr />";			
 				
 			$lis .= $item;					

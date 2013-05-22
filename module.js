@@ -30,10 +30,27 @@ M.repository_mytube.init = function(Y,opts) {
 
 //Insert video link back into htmlarea
 function repository_mytube_insertYoutubeLink(vid) {
-	document.getElementById('id_youtubeid').value=vid;
+	//we may or may not be in an iframe so we try both levels
+	var usedoc = document.getElementById('id_repository_mytube_youtubeid');
+	if(!usedoc){
+		usedoc = parent.document.getElementById('id_repository_mytube_youtubeid');
+	}
+	usedoc.value=vid;
+	repository_mytube_pushnext();
 }
 
+//Insert video link back into htmlarea
+function repository_mytube_pushnext() {
+	//we may or may not be in an iframe so we try both levels
+	var usedoc = document.getElementById('id_repository_mytube_youtubeid');
+	if(usedoc){
+		usedoc = document;
+	}else{
+		usedoc = parent.document;
+	}
+	usedoc.getElementsByClassName('fp-login-submit')[0].click();
 
+}
 
 function loadtabs(tabsetid){
         console.log('running loadtabs');
@@ -114,7 +131,7 @@ function repository_mytube_displayBrowseList() {
 }
 
 function repository_mytube_onUploadSuccess(event) {
-			document.getElementById('id_youtubeid').value=event.data.videoId;
+			repository_mytube_insertYoutubeLink(event.data.videoId);
 	  }
 function repository_mytube_onProcessingComplete(event) {
 			//document.getElementById('id_youtubeid').value=event.data.videoId;

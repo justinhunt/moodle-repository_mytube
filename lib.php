@@ -45,6 +45,7 @@ class repository_mytube extends repository {
      */
     public function __construct($repositoryid, $context = SYSCONTEXTID, $options = array()) {
         parent::__construct($repositoryid, $context, $options);
+		$this->initjs();
     }
 
 	public static function get_instance_option_names() {
@@ -148,64 +149,12 @@ class repository_mytube extends repository {
 						   get_string('allowytrespond', 'repository_mytube'));
 		
     }
-	
-    private function get_recorder() {
-        global $CFG;
-        $recorder = "this is a recorder";
-        return $recorder;
-    }
+
 
     public function initjs(){
         
             global $PAGE;  
-            $this->ytconfig = $this->get_ytconfig();
-            
-            //set up our javascript for the YUI tabs
-            $jsmodule = array(
-                    'name'     => 'repository_mytube',
-                    'fullpath' => '/repository/mytube/module.js',
-                    'requires' => array('tabview')
-            );
-
-            //configure our options array for the javascript
-            $opts = array(
-                    "tabsetid"=> $this->ytconfig->get('tabsetid')
-            );
-
-            //request the javascript on the page
-            $PAGE->requires->js_init_call('M.repository_mytube.loadyuitabs', array($opts),false,$jsmodule);
-    }
-    
-    	public function xget_upload_template(){
-            global $PAGE,$CFG;
-            
-            $this->ytconfig = $this->get_ytconfig();
-            
-            //set up our javascript for the YUI tabs
-            $jsmodule = array(
-                    'name'     => 'repository_mytube',
-                    'fullpath' => '/repository/mytube/module.js',
-                    'requires' => array('tabview')
-            );
-
-            //configure our options array for the javascript
-            $opts = array(
-                    "tabsetid"=> $this->ytconfig->get('tabsetid')
-            );
-
-            //request the javascript on the page
-            $PAGE->requires->js_init_call('M.repository_mytube.init', array($opts),false,$jsmodule);
-
-            
-            $template = "<iframe scrolling=\"no\" frameBorder=\"0\" src=\"{$CFG->wwwroot}/repository/mytube/recorder.php?parentid={$this->id}\" height=\"350\" width=\"450\"></iframe>";
-            
-            return $template;
-        }
-        
-        public function get_upload_template(){
-            global $PAGE,$CFG;
-            
-            //set up our javascript for the YUI tabs
+           //set up our javascript for the YUI tabs
             $jsmodule = array(
                     'name'     => 'repository_mytube',
                     'fullpath' => '/repository/mytube/module.js',
@@ -233,101 +182,29 @@ class repository_mytube extends repository {
 
             //request the javascript on the page
             $PAGE->requires->js_init_call('M.repository_mytube.init', array($opts),false,$jsmodule);
-			
-			$template = "";
-			$template = '<form  method="POST">';
-			$template .= "<input type=\"hidden\" name=\"id_youtubeid\" id=\"id_youtubeid\"/>";
-
-            //build our template html containing all the youtube stuff
-            $template .= $yt->get_youtube_tabset();
-            $template .= "<iframe scrolling=\"no\" frameBorder=\"0\" src=\"{$CFG->wwwroot}/repository/mytube/triggerjs.html\" height=\"1\" width=\"1\"></iframe>";
-   			$template .= '</form>';
-   			$template .= '<button class="{!}fp-upload-btn">'.get_string('upload', 'repository').'</button>';
-            return preg_replace('/\{\!\}/', '', $template);
-            //return $template;
-           // return $this->get_pauls_form($template);
-        }
-        
-    public function get_pauls_form($rec){
-    	$template = '
-<div class="fp-upload-form mdl-align">
-<div class="fp-content-center">
-<form enctype="multipart/form-data" method="POST">
-<table >
-<tr class="{!}fp-setauthor">
-<td class="mdl-right"><label>'.get_string('author', 'repository').'</label>:</td>
-<td class="mdl-left"><input type="text"/></td>
-</tr>
-<tr class="{!}fp-setlicense">
-<td class="mdl-right"><label>'.get_string('chooselicense', 'repository').'</label>:</td>
-<td class="mdl-left"><select/></td>
-</tr>
-<tr class="{!}fp-recordaudio-recorder">
-<td class="mdl-right"><label>nahnaha</label>:</td>
-<td class="mdl-left">'.$rec.'</td></tr>
-</tr>
-<tr class="{!}fp-file">
-<td class="mdl-right"></td>
-<td class="mdl-left"><input type="file"/></td>
-</tr>
-<tr class="{!}fp-saveas">
-<td class="mdl-right"></td>
-<td class="mdl-left"><input type="text"/></td>
-</tr>
-</table>
-</form>
-<div><button class="{!}fp-upload-btn">'.get_string('upload', 'repository').'</button></div>
-</div>
-</div> ';
-        return preg_replace('/\{\!\}/', '', $template);
     }
     
+
     
-    
-	public function get_youtube_form($yt){
+	public function get_youtube_form($yt=null){
+		global $CFG;
 		
 		$form = '';
+
+		if(!$yt){
+			//init youtube api
+            $this->ytconfig = $this->get_ytconfig();
+            $ytargs = Array('component'=>$this->component,'config'=>$this->ytconfig);
+            $yt = new repository_mytube_youtube_api($ytargs);
+		}
 		
-		//init youtube api
-		$this->ytconfig = $this->get_ytconfig();
-		$ytargs = Array('component'=>$this->component,'config'=>$this->ytconfig);
-		$yt = new repository_mytube_youtube_api($ytargs);
-		
-		//pass tabset html onto where JS can get at it
-		/*
-		$params['youtube_tabset'] = $yt->get_youtube_tabset();
-		$params['uploader_html'] = get_string('uploadavideodetails', $this->component) 
-					. $yt->get_uploader_iframe_html();
-		$params['browselist_html'] = get_string('browsevideosdetails', $this->component) 
-					. $yt->get_browser_iframe_html();
-		$params['browselist_button_html'] = get_string('browsevideosdetails', $this->component) 
-					. $yt->get_youtube_browselist_displaybutton();
-					*/
+		//$form .= "<input type=\"hidden\" name=\"id_repository_mytube_youtubeid\" id=\"id_youtubeid\"/>";
 		$form .= $yt->get_youtube_tabset();
-		
-		//$form .= "<script type='text/javascript'>loadtabs();</script>";
-		
-		
-		
+		$form.= "<iframe scrolling=\"no\" frameBorder=\"0\" src=\"{$CFG->wwwroot}/repository/mytube/triggerjs.html\" height=\"1\" width=\"1\"></iframe>";
+
 		return $form;
 	}
 
-
-
-    public function check_login() {
-        // Needs to return false so that the "login" form is displayed (print_login())
-        return false;
-    }
-
-    public function global_search() {
-        // Plugin doesn't support global search, since we don't have anything to search
-        return false;
-    }
-
-    public function get_listing($path='', $page = '') {
-        return array();
-    }
-	
 	public function get_ytconfig(){
 		global $CFG, $USER;
 		
@@ -361,37 +238,112 @@ class repository_mytube extends repository {
 		$config->set('modroot','/repository/mytube');
 		//eg /mod/assign/view.php
 		//$config->set('returnurl',$PAGE->url);
-		$config->set('returnurl',$CFG->httpswwwroot . '/repository/mytube_callback.php');
+		$config->set('returnurl','/repository/mytube/youtube_callback.php');
+		$config->set('returnparam',$this->id);
 		$config->set('shortdesc','MyTube Repository');
 		
 		return $config;
 	}
 
 
-	/**
-	* Process uploaded file
-	* @return array|bool
-	*/
-    public function upload($search_text) {
-        return array(
-                'url'=>'http://youtu.be/TJ_ksEd0ccQ',
-                'id'=>0,
-                'file'=>'YouTube Video');
-        
+   public function check_login() {
+        // Needs to return false so that the "login" form is displayed (print_login())
+        return false;
     }
- 
 
-    /**
-     * Generate upload form
-     */
-    public function print_login($ajax = true) {
-        $ret = array('nosearch'=>true, 'norefresh'=>true, 'nologin'=>true);
-        $ret['upload'] = array('id'=>'repo-form');
+    public function global_search() {
+        // Plugin doesn't support global search, since we don't have anything to search
+        return false;
+    }
+	
+	 ///
+     // Return search results
+     // @param string $search_text
+     // @return array
+     //
+     //added $page=0 param for 2.3 compat justin 20120524
+    public function search($filename, $page=0) {
+        $this->keyword = $filename;
+        $ret  = array();
+        $ret['nologin'] = true;
+		$ret['nosearch'] = true;
+        $ret['norefresh'] = true;
+        //echo $filename;
+		$ret['list'] = $this->fetch_newvid_url($filename);
+		
         return $ret;
     }
 
+    public function get_listing($path='', $page = '') {
+        return array();
+    }
+	
+    
+	/**
+	* Hijack the login form with our youtube widget
+	* @return array|bool
+	*/
+	public function print_login($ajax = true) {
+		global $CFG;
+        //Init our array
+        $ret = array();
+        
+		//If we are using an iframe based repo
+        $search = new stdClass();
+        $search->type = 'hidden';
+        $search->id   = 'id_repository_mytube_youtubeid' ;
+        $search->name = 's';
+        
+        //had to use an iframe to house the form, some sort of templating was 
+        //combining our fields inserted into the label with other stuff. total disaster
+		$src = $CFG->httpswwwroot .  '/repository/mytube/recorder.php';
+		//$src = 'http://m24.poodll.com/repository/mytube/recorder.php';
+		$src .= '?parentid=' . $this->id;
+        $search->label ="<iframe src='$src' width='540' height='360' frameborder='0'></iframe>";
+		
+		
+		//$search->label = $this->get_youtube_form();
+		
+
+
+        $ret['login'] = array($search);
+        $ret['login_btn_label'] = 'Next >>>';
+        $ret['login_btn_action'] = 'search';
+	
+        return $ret;
+		
+    }
+    
+	private function fetch_newvid_url($video_id){
+		global $CFG;
+		//if it looks like a youtube id, continue, otherwise do not continue
+		if($video_id && strlen($video_id)>7){
+			$list[] = array(
+                'title'=> get_string('ayoutubevideo', $this->component). '.avi', // this is a hack so we accept this file by extension
+                'thumbnail'=>"{$CFG->wwwroot}/repository/mytube/pix/icon.png",
+                'thumbnail_width'=>120,
+                'thumbnail_height'=>80,
+                'size'=>'',
+                'date'=>'',
+                'source'=>'http://youtu.be/' .$video_id
+            );
+		}else{
+			$list[]= array();
+		}
+			return $list;
+	}
+	
+
+ /**
+     * file types supported by youtube plugin
+     * @return array
+     */
+    public function supported_filetypes() {
+        return array('video');
+    }
+
     /**
-     * supported return types
+     * Youtube plugin only return external links
      * @return int
      */
     public function supported_returntypes() {

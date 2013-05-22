@@ -25,11 +25,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
  
-require_once('/../../config.php');
+require_once('../../config.php');
 require_once('youtubelib.php');
+require_once($CFG->dirroot . '/repository/mytube/lib.php');
 require_login();
 
 $oauth2code   = required_param('oauth2code', PARAM_RAW);
+$parentid   = required_param('returnparam', PARAM_RAW);
 
 /// Headers to make it not cacheable
 header('Cache-Control: no-cache, must-revalidate');
@@ -41,11 +43,12 @@ set_time_limit(0);
 /*attempt to load youtube api */
 // load the youtube submission plugin
 	require_once($CFG->dirroot . '/repository/mytube/lib.php');
-	$ytplugin = repository_mytube::get("youtube");
+	//$ytplugin = repository_mytube::get("youtube");
+	$ytplugin = repository::get_instance($parentid);
 	$ytconfig = $ytplugin->get_ytconfig();
 	$ytargs = Array('component'=>'repository_mytube','config'=>$ytconfig);
 	
-	$ytapi = new youtubeapi($ytargs);
+	$ytapi = new repository_mytube_youtube_api($ytargs);
 	if(empty($ytapi)) {
 		$loggedin = false;
 	}else{

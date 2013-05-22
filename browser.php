@@ -51,4 +51,5 @@ $PAGE->set_url($CFG->wwwroot.'/repository/mytube/browser.php');
 	}
 	
 	//return the html
+	echo "<link href=\"youtube.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	echo $ytapi->fetch_youtube_browselist();
