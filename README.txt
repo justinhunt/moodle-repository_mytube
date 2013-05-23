@@ -7,4 +7,4 @@ REQUIREMENTS:
 Moodle 2.3.1+ (Build 20120816) or newer
 Internet access
 
-INSTALLATION:
+

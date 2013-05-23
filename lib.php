@@ -93,19 +93,19 @@ class repository_mytube extends repository {
 
 		$mform->addElement('text', 'youtube_masteruser',
 								get_string('youtubemasteruser', 'repository_mytube'));
-		$mform->disabledIf('youtube_masteruser', 'authtype', 'eq', 'byuser');
+		//$mform->disabledIf('youtube_masteruser', 'authtype', 'eq', 'byuser');
 								
 		$mform->addElement('password', 'youtube_masterpass',
 								get_string('youtubemasterpass', 'repository_mytube'));
-		$mform->disabledIf('youtube_masterpass', 'authtype', 'eq', 'byuser');
+		//$mform->disabledIf('youtube_masterpass', 'authtype', 'eq', 'byuser');
 
 		$mform->addElement('text', 'youtube_clientid',
 								get_string('youtubeclientid', 'repository_mytube'));
-		$mform->disabledIf('youtube_clientid', 'authtype', 'eq', 'bymaster');
+		//$mform->disabledIf('youtube_clientid', 'authtype', 'eq', 'bymaster');
 								
 		$mform->addElement('text', 'youtube_secret',
 								get_string('youtubesecret', 'repository_mytube'));
-		$mform->disabledIf('youtube_secret', 'authtype', 'eq', 'bymaster');
+		//$mform->disabledIf('youtube_secret', 'authtype', 'eq', 'bymaster');
 	
 	
 		// Video Default Settings
