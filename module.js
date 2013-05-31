@@ -2,7 +2,7 @@
  * Javascript for repository_youtube
  * 
  *
- * @copyright &copy; 2012 Justin Hunt
+ * @copyright &copy; 2013 Justin Hunt
  * @author Justin Hunt
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package repository_mytube
@@ -71,16 +71,6 @@ M.repository_mytube.loadyuitabs = function(Y, opts) {
 	});
 }
 
-// Replace youtube designated divs with youtube players
-M.repository_mytube.loadytplayer = function(Y,opts) {
-
-    //  function onYouTubeIframeAPIReady() {
-	directLoadYTPlayer(opts['playerid'],
-		opts['width'],
-        opts['height'],      
-        opts['videoid']);   
-	  //}
-}
 
 M.repository_mytube.loadytrecorder = function(Y,opts) {
 

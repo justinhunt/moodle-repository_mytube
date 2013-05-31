@@ -469,7 +469,7 @@ class repository_mytube_youtube_api {
 			$thumburls =$videoEntry->getVideoThumbnails();
 			$thumburl = $thumburls[0]['url'];
 			
-			$item = "<div><table class='repository_mytube_result_row' width='500'><tr><td class='repository_mytube_result_thumbcell'><img src='". $thumburl 
+			$item = "<div><table class='repository_mytube_result_row' width='470'><tr><td class='repository_mytube_result_thumbcell'><img src='". $thumburl 
 					. "' height='50'/></td><td class='repository_mytube_result_infocell'><strong>$title</strong></br>Length: $showlength Date: $showdate" 
 					. "<br /><button type='button' onclick='window.parent.repository_mytube_insertYoutubeLink(\"$vid\");window.parent.repository_mytube_pushnext();' class='repository_mytube_result_insert'>INSERT</button>"
 					. "</td></tr></table> </div><hr />";			

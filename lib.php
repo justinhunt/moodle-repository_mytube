@@ -59,7 +59,6 @@ class repository_mytube extends repository {
 
 		
 // Section for setting tab visibility
-//$settings->add(new admin_setting_heading('visibletabsheading', '', get_string('visibletabsheading', 'repository_mytube')));
 	
 		// Allow uploads
 		$mform->addElement('checkbox','allow_uploads',
@@ -77,8 +76,6 @@ class repository_mytube extends repository {
 		$mform->setDefault('allow_browse', 1);
 						   
 		// Section for authentication keys and settings
-		//$settings->add(new admin_setting_heading('keysauthheading', '', get_string('keysauthheading', 'repository_mytube')));
-
 		//The authentication type, master user or student by student
 		$authoptions = array('bymaster' => get_string('bymaster', 'repository_mytube'),
 								'byuser' => get_string('byuser', 'repository_mytube'));
@@ -109,7 +106,6 @@ class repository_mytube extends repository {
 	
 	
 		// Video Default Settings
-		//$settings->add(new admin_setting_heading('videoinfoheading', '', get_string('videoinfoheading', 'repository_mytube')));
 		$privacyoptions = array('unlisted' => get_string('unlisted', 'repository_mytube'),
 			'public' => get_string('public', 'repository_mytube'),
 			'private' => get_string('private', 'repository_mytube'));
@@ -297,14 +293,9 @@ class repository_mytube extends repository {
         //had to use an iframe to house the form, some sort of templating was 
         //combining our fields inserted into the label with other stuff. total disaster
 		$src = $CFG->httpswwwroot .  '/repository/mytube/recorder.php';
-		//$src = 'http://m24.poodll.com/repository/mytube/recorder.php';
 		$src .= '?parentid=' . $this->id;
-        $search->label ="<iframe src='$src' width='540' height='360' frameborder='0'></iframe>";
-		
-		
+        $search->label ="<iframe src='$src' width='540' height='380' frameborder='0'></iframe>";
 		//$search->label = $this->get_youtube_form();
-		
-
 
         $ret['login'] = array($search);
         $ret['login_btn_label'] = 'Next >>>';
@@ -319,7 +310,9 @@ class repository_mytube extends repository {
 		//if it looks like a youtube id, continue, otherwise do not continue
 		if($video_id && strlen($video_id)>7){
 			$list[] = array(
-                'title'=> get_string('ayoutubevideo', $this->component). '.avi', // this is a hack so we accept this file by extension
+				'shorttitle'=>get_string('ayoutubevideo', 'repository_mytube'),
+				'thumbnail_title'=>get_string('ayoutubevideo', 'repository_mytube'),
+                'title'=> get_string('ayoutubevideo', 'repository_mytube'). '.avi', // this is a hack so we accept this file by extension
                 'thumbnail'=>"{$CFG->wwwroot}/repository/mytube/pix/icon.png",
                 'thumbnail_width'=>120,
                 'thumbnail_height'=>80,

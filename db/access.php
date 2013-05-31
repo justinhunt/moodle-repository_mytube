@@ -19,9 +19,9 @@
  * Module Capabilities/permissions
  *
  * @package    repository
- * @subpackage recordaudio
- * @copyright  2012 Paul Nicholls
- * @author     Paul Nicholls <paul.nicholls@canterbury.ac.nz>
+ * @subpackage mytube
+ * @copyright  2013 Justin Hunt
+ * @author     justin Hunt <poodllsupport@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

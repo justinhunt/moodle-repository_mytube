@@ -19,7 +19,7 @@
  * Crowdfunded by many cool people.
  *
  * @package    repository_mytube
- * @copyright 2012 Justin Hunt {@link http://www.poodll.com}
+ * @copyright 2013 Justin Hunt {@link http://www.poodll.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
