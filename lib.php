@@ -55,7 +55,8 @@ class repository_mytube extends repository {
     }
     
 
-    public static function instance_config_form($mform) {
+//2.3 requires static, 2.2 non static, 
+    public function instance_config_form($mform) {
 
 		
 // Section for setting tab visibility
