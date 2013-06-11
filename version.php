@@ -28,6 +28,6 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->version   = 2013053100;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->release   = '1.0.1 (2013053100)';
-$plugin->requires  = 2012062501.11;        // Requires this Moodle version
+$plugin->requires  = 2011070100;        // Requires this Moodle version
 $plugin->maturity  = MATURITY_BETA;
 $plugin->component = 'repository_mytube'; // Full name of the plugin 

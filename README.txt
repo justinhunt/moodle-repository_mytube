@@ -1,11 +1,11 @@
-MyTube repository plugin for Moodle 2.3
+MyTube repository plugin for Moodle 2.1,2.2
 
 INTRODUCTION:
 The MyTube repository allows users to record or upload video directly into YouTube, 
 and to select videos directly from the authorised uses uploads for insertion into Moodle.
 
 REQUIREMENTS:
-*	Moodle 2.3.1+ (Build 20120816) or newer
+*	Moodle 2.1 (Build 2011070100) to Moodle 2.2 (2.3 2.4 2.5 etc, WON'T work with this version)
 *	Internet access
 *	Multimedia plugins filter enabled (to turn YouTube links into YouTube players)
 *	YouTube API keys (developer key, OAUTH2 client id, OAUTH2 secret). These are available free of charge from YouTube/Google. 
